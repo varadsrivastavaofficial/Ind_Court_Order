@@ -53,11 +53,3 @@ src/
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-### Vercel Deployment
-
-If you are deploying this project on Vercel, you need to add the API key to your Vercel project settings:
-
-1. Go to your Vercel Project > **Settings** > **Environment Variables**.
-2. Add a new variable with the key `GEMINI_API_KEY` and your actual API key as the value.
-3. **Important:** Ensure you trigger a **Redeploy** (Deployments > three dots > Redeploy) after adding or changing the environment variable so it gets included in the build.
