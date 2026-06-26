@@ -6,6 +6,7 @@
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
+import { googleAI } from '@genkit-ai/google-genai';
 
 const GenerateCourtOrderInputSchema = z.object({
   targetName: z.string(),
@@ -25,18 +26,17 @@ export type GenerateCourtOrderOutput = z.infer<typeof GenerateCourtOrderOutputSc
 export async function generateCourtOrder(input: GenerateCourtOrderInput): Promise<{ success: boolean; data?: GenerateCourtOrderOutput; error?: string }> {
   // Check if any variant of the key exists for better debugging
   const hasKey = !!(process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY || process.env.GOOGLE_API_KEY);
-  
+
   if (!hasKey) {
-    return { 
-      success: false, 
-      error: 'API_KEY_MISSING: The server could not find GEMINI_API_KEY. Please check Vercel Settings > Environment Variables.' 
+    return {
+      success: false,
+      error: 'API_KEY_MISSING: The server could not find GEMINI_API_KEY. Please check Vercel Settings > Environment Variables.'
     };
   }
 
   try {
     const { output } = await ai.generate({
-      model: 'googleai/gemini-1.5-pro',
-      input: input,
+      model: 'googleai/gemini-2.5-pro',
       output: { schema: GenerateCourtOrderOutputSchema },
       config: {
         temperature: 0.7,
@@ -67,9 +67,9 @@ Format:
     return { success: true, data: output };
   } catch (error: any) {
     console.error('[GENKIT_ERROR]', error);
-    
+
     let errorMessage = error.message || 'An unexpected error occurred.';
-    
+
     // Improved error mapping
     if (errorMessage.includes('404') || errorMessage.includes('not found')) {
       errorMessage = 'MODEL_NOT_FOUND: Gemini 1.5 Pro could not be accessed. This might be a regional restriction or API version mismatch.';
